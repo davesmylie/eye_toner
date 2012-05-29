@@ -1,0 +1,58 @@
+<html>
+<head><title>test</title>
+<body>
+<div>
+<input type="range" min="150" max="500" value="150" style='width: 500px'  onchange="showValue(this.value)" />
+</div>
+<canvas id="example" style='border:1px solid black'  width="1000px" height="400px">
+This text is displayed if your browser does not support HTML5 Canvas.
+</canvas>
+<script type='text/javascript'>
+var canvas = document.getElementById('example');
+var context = canvas.getContext('2d');
+var xpos = 300;
+var ypos = 200;
+var size = 58;    // size of the outer circle
+var lineWidth = 15;
+var offset = 5;  // the distance the center circle is offset (to get 3d)
+var initial_distance = 150; // distance intial appart of circles
+
+
+draw_circles(initial_distance);
+function draw_circles(distance){
+	draw_circle(context, xpos, ypos, size, offset);
+	draw_circle(context, xpos + Number(distance), ypos, size, (offset * -1));
+}
+
+function draw_circle(ctx, x, y, size, xoffset){
+        console.log("Drawing circle at x:(" + x + "), y:("+y+"), size:("+size+")");
+	ctx.fillStyle = 'black';
+        ctx.lineWidth = lineWidth;
+        // draw outside
+	ctx.beginPath();
+	ctx.arc(x, y, size, 0, Math.PI*2, true); 
+	ctx.closePath();
+	ctx.stroke();
+
+        //draw inside
+	ctx.beginPath();
+	ctx.arc(x + xoffset, y, size-25, 0, Math.PI*2, true); 
+	ctx.closePath();
+	ctx.stroke();
+
+}
+
+
+function showValue(distance)
+{
+console.log("trying to draw cicrles at " + distance);
+      context.clearRect(0,0, canvas.width, canvas.height);
+      draw_circles(Number(distance))
+	  context.fillStyle = "blue";
+	  context.font = "bold 16px Arial";
+	  context.fillText("Distance: " + distance  + " (roughly  " +(distance/40) + "cm)", 20, canvas.height -  30);
+}
+
+</script>
+</body>
+</html>
