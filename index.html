@@ -7,50 +7,78 @@
 <canvas id="example" style='border:1px solid black'  width="1000px" height="400px">
 This text is displayed if your browser does not support HTML5 Canvas.
 </canvas>
+<input type="range" min="-20" max="20" value="5" style='-webkit-appearance: slider-vertical;width:10px; height: 200px; padding-right: 20px;'  onchange="moveOffset(this.value)" />
+<input type="range" min="40" max="100" value="58" style='-webkit-appearance: slider-vertical;width:10px; height: 200px; padding-right: 20px;'  onchange="outerCircle(this.value)" />
+<input type="range" min="20" max="40" value="25" style='-webkit-appearance: slider-vertical;width:10px; height: 200px; padding-right: 20px;'  onchange="innerCircle(this.value)" />
+<input type="range" min="1" max="20" value="15" style='-webkit-appearance: slider-vertical;width:10px; height: 200px; padding-right: 20px;'  onchange="lineWidth(this.value)" />
 <script type='text/javascript'>
 var canvas = document.getElementById('example');
 var context = canvas.getContext('2d');
 var xpos = 300;
 var ypos = 200;
-var size = 58;    // size of the outer circle
-var lineWidth = 15;
+var outer_size = 58;    // size of the outer circle
+var inner_size = 25;     // size of the inner circle
+var line_width = 15;
 var offset = 5;  // the distance the center circle is offset (to get 3d)
-var initial_distance = 150; // distance intial appart of circles
+var distance = 150; // distance intial appart of circles
 
 
-draw_circles(initial_distance);
+draw_circles(distance);
 function draw_circles(distance){
-	draw_circle(context, xpos, ypos, size, offset);
-	draw_circle(context, xpos + Number(distance), ypos, size, (offset * -1));
+	draw_circle(xpos, ypos, offset);
+	draw_circle(xpos + Number(distance), ypos, offset * -1);
 }
 
-function draw_circle(ctx, x, y, size, xoffset){
-        console.log("Drawing circle at x:(" + x + "), y:("+y+"), size:("+size+")");
-	ctx.fillStyle = 'black';
-        ctx.lineWidth = lineWidth;
+function draw_circle( x, y, p_offset){
+        console.log("Drawing circle at x:(" + x + "), y:("+y+"), size:("+outer_size+")");
+	context.fillStyle = 'black';
+        context.lineWidth = line_width;
         // draw outside
-	ctx.beginPath();
-	ctx.arc(x, y, size, 0, Math.PI*2, true); 
-	ctx.closePath();
-	ctx.stroke();
+	context.beginPath();
+	context.arc(x, y, outer_size, 0, Math.PI*2, true); 
+	context.closePath();
+	context.stroke();
 
         //draw inside
-	ctx.beginPath();
-	ctx.arc(x + xoffset, y, size-25, 0, Math.PI*2, true); 
-	ctx.closePath();
-	ctx.stroke();
+	context.beginPath();
+	context.arc(x + p_offset, y, inner_size, 0, Math.PI*2, true); 
+	context.closePath();
+	context.stroke();
 
 }
 
-
-function showValue(distance)
-{
+function drawScreen(){
 console.log("trying to draw cicrles at " + distance);
       context.clearRect(0,0, canvas.width, canvas.height);
-      draw_circles(Number(distance))
+      draw_circles(distance)
 	  context.fillStyle = "blue";
 	  context.font = "bold 16px Arial";
 	  context.fillText("Distance: " + distance  + " (roughly  " +(distance/40) + "cm)", 20, canvas.height -  30);
+
+}
+function moveOffset(p_offset) {
+     offset = Number(p_offset);
+     drawScreen();
+}
+
+function showValue(p_distance) {
+  distance = Number(p_distance);
+  drawScreen();
+}
+
+function innerCircle(p_size) {
+  inner_size = Number(p_size);
+  drawScreen();
+}
+
+function outerCircle(p_size) {
+  outer_size = Number(p_size);
+  drawScreen();
+}
+
+function lineWidth(p_width) {
+  line_width = Number(p_width);
+  drawScreen();
 }
 
 </script>
