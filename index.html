@@ -2,16 +2,17 @@
 <head><title>test</title>
 <body>
 <div>
-<input type="range" min="150" max="500" value="150" style='width: 500px'  onchange="showValue(this.value)" />
+<input type="range" id='distance' min="150" max="500" value="150" style='width: 500px'  onchange="showValue(this.value)" />
 </div>
 <canvas id="example" style='border:1px solid black'  width="1000px" height="400px">
 This text is displayed if your browser does not support HTML5 Canvas.
 </canvas>
-<input type="range" min="-20" max="20" value="5" style='-webkit-appearance: slider-vertical;width:10px; height: 200px; padding-right: 20px;'  onchange="moveOffset(this.value)" />
+<input type="range" id='offset' min="-20" max="20" value="5" style='-webkit-appearance: slider-vertical;width:10px; height: 200px; padding-right: 20px;'  onchange="moveOffset(this.value)" />
 <input type="range" min="40" max="100" value="58" style='-webkit-appearance: slider-vertical;width:10px; height: 200px; padding-right: 20px;'  onchange="outerCircle(this.value)" />
 <input type="range" min="20" max="40" value="25" style='-webkit-appearance: slider-vertical;width:10px; height: 200px; padding-right: 20px;'  onchange="innerCircle(this.value)" />
 <input type="range" min="1" max="20" value="15" style='-webkit-appearance: slider-vertical;width:10px; height: 200px; padding-right: 20px;'  onchange="lineWidth(this.value)" />
 <script type='text/javascript'>
+window.addEventListener('keydown',doKeyDown,true);
 var canvas = document.getElementById('example');
 var context = canvas.getContext('2d');
 var xpos = 300;
@@ -53,7 +54,8 @@ console.log("trying to draw cicrles at " + distance);
       draw_circles(distance)
 	  context.fillStyle = "blue";
 	  context.font = "bold 16px Arial";
-	  context.fillText("Distance: " + distance  + " (roughly  " +(distance/40) + "cm)", 20, canvas.height -  30);
+    // keep the text centered so we can see it when cross eyed
+	  context.fillText("Distance: " + distance  + " (roughly  " +(distance/40) + "cm)", (xpos-150) + Number(distance), canvas.height -  30);
 
 }
 function moveOffset(p_offset) {
@@ -79,6 +81,30 @@ function outerCircle(p_size) {
 function lineWidth(p_width) {
   line_width = Number(p_width);
   drawScreen();
+}
+
+
+
+function doKeyDown(evt){
+  console.log("keyboard event " + evt.keyCode);
+  switch (evt.keyCode) {
+    case 38:  /* Up arrow was pressed  - increase 3d*/
+      offset = offset - 1;
+      break;
+    case 40:  /* Down arrow was pressed - decrease 3d */
+      offset = offset + 1;
+      break;
+    case 37:  /* Left arrow was pressed - move apart*/
+      distance = distance - 1;
+      break;
+    case 39:  /* Right arrow was pressed - move together*/
+      distance = distance + 1;
+      break;
+  }
+  console.log("distance now " + distance);
+  drawScreen();
+  $('#distance').val(Number(distance));
+  $('#offset').val(Number(offset));
 }
 
 </script>
